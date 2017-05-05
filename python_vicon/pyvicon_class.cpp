@@ -442,7 +442,7 @@ PyMODINIT_FUNC initpyvicon(void) {
     m = Py_InitModule("pyvicon", ModuleMethods);
     
     //create+add ViconError
-    ViconError = PyErr_NewException("pyvicon.error", NULL, NULL);
+    ViconError = PyErr_NewException((char*)"pyvicon.error", NULL, NULL);
     Py_INCREF(ViconError);
     PyModule_AddObject(m, "error", ViconError);
 }
