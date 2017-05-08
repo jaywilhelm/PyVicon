@@ -334,7 +334,18 @@ static PyObject* pyvicon_globaltranslation(PyObject* self, PyObject* args) {
     //magic, isn't it?
     return Py_BuildValue("ddd", out.Translation[0], out.Translation[1], out.Translation[2]);
 }
+static PyObject* pyvicon_globalquaternion(PyObject* self, PyObject* args) {
+    PyObject* capsule;
+    char* name;
 
+    //parse
+    if (!PyArg_ParseTuple(args, "Os", &capsule, &name)) return NULL;
+    Client* client = (Client*)PyCapsule_GetPointer(capsule, NULL);
+    Output_GetSegmentGlobalRotationQuaternion  out = client->GetSegmentGlobalRotationQuaternion (name, name);
+    if (handleError(out.Result)) return NULL;
+
+    return Py_BuildValue("dddd", out.Rotation [0], out.Rotation [1], out.Rotation [2],out.Rotation [3]);
+}
 //------------------------ marker, frame, other --------------------------
 
 static PyObject* pyvicon_frame(PyObject* self, PyObject* args) {
@@ -418,6 +429,7 @@ static PyMethodDef ModuleMethods[] = {
      {"subjects", pyvicon_subjects, METH_VARARGS, "Get a list of all subjects"},
      {"globalRotation", pyvicon_globalrotation, METH_VARARGS, "Get global rotation of a subject"},
      {"globalTranslation", pyvicon_globaltranslation, METH_VARARGS, "Get global translation of a subject"},
+     {"globalQuaternion",pyvicon_globalquaternion,METH_VARARGS,"Get global quat"},
      {"markerCount", pyvicon_markercount, METH_VARARGS, "Get number of markers of a subject"},
      {"markerStatus", pyvicon_markerstatus, METH_VARARGS, "Get total and visible number of markers of a subject"},
      {"frame", pyvicon_frame, METH_VARARGS, "A status thing, call it before retrieving any data"},
@@ -442,7 +454,7 @@ PyMODINIT_FUNC initpyvicon(void) {
     m = Py_InitModule("pyvicon", ModuleMethods);
     
     //create+add ViconError
-    ViconError = PyErr_NewException((char*)"pyvicon.error", NULL, NULL);
+    ViconError = PyErr_NewException("pyvicon.error", NULL, NULL);
     Py_INCREF(ViconError);
     PyModule_AddObject(m, "error", ViconError);
 }
