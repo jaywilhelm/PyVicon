@@ -8,4 +8,7 @@ if sys.platform == 'linux2':
     from pyvicon_class import PyVicon
     sys.setdlopenflags(flags)
 else:
-    from pyvicon_class import PyVicon
+    #import os
+    #cwd = os.getcwd()
+    #print(cwd)
+    from python_vicon.pyvicon_class import PyVicon

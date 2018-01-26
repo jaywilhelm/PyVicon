@@ -115,14 +115,14 @@ def main(sysargs):
     from python_vicon import PyVicon
     import time
 
-    print "Connecting to Vicon..."
+    print ("Connecting to Vicon...")
     client = PyVicon()
     client.connect("192.168.10.1", 801)
 
     if not client.isConnected():
-        print "Failed to connect to Vicon!"
+        print ("Failed to connect to Vicon!")
         return 1
-    print "Sending Mocap data"
+    print ("Sending Mocap data")
     csvfiles = []
     csvwriters = {}
     time_usec = 0#time.clock() * 1000 * 1000

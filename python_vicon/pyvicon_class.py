@@ -8,7 +8,7 @@
 # Wraps the static functions made in the .cpp into a Python class object.
 # 
 
-import pyvicon
+import python_vicon.pyvicon
 
 class PyVicon:
     SM_ClientPull = 0
@@ -86,6 +86,8 @@ class PyVicon:
     
     def hasMarkerData(self):
         return pyvicon.hasMarkerData(self._c)
+    def myversion(self):
+        return 1
 
 if __name__ == "__main__":
     client = PyVicon()
