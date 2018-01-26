@@ -89,16 +89,16 @@ class PyVicon:
 
 if __name__ == "__main__":
     client = PyVicon()
-    print client.__version__
-    print client.isConnected()
-    print client.enableSegmentData()
-    print client.hasSegmentData()
-    print client.connect("192.168.10.1", 801)
+    print (client.__version__)
+    print( client.isConnected())
+    print( client.enableSegmentData())
+    print( client.hasSegmentData())
+    print( client.connect("192.168.10.1", 801))
     #print client.frameRate()
     if client.isConnected():
-        print client.enableMarkerData()
-        print client.hasMarkerData()
-        print client.isConnected()
-    print client.disconnect()
+        print (client.enableMarkerData())
+        print (client.hasMarkerData())
+        print (client.isConnected())
+    print (client.disconnect())
     
     exit(0)

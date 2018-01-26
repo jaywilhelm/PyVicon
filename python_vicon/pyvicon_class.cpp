@@ -1,16 +1,43 @@
+// 2018-01-26
+// Jay Wilhelm - Moved to Python 3
+// 2015-09-18
+// Gwilyn Saunders
+//
 // 
 // Vicon python bindings
 // Written for the EagleEye project at the University of South Australia
 // 
-// 2015-09-18
-// Gwilyn Saunders
-//
 // Exposes a subset of the C++ Client class as Python functions.
 // 
 
 #include <Python.h>
 #include <string>
 #include "Client.h"
+
+#if PY_MAJOR_VERSION >= 3
+#define IS_PY3K
+#endif
+
+struct module_state {
+    PyObject *error;
+};
+#if PY_MAJOR_VERSION >= 3
+#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+#else
+#define GETSTATE(m) (&_state)
+static struct module_state _state;
+#endif
+/*static PyObject *
+error_out(PyObject *m) {
+    struct module_state *st = GETSTATE(m);
+    PyErr_SetString(st->error, "something bad happened");
+    return NULL;
+}*/
+
+/*static PyMethodDef pyvicon_methods[] = {
+    {"error_out", (PyCFunction)error_out, METH_NOARGS, NULL},
+    {NULL, NULL}
+};*/
 
 using namespace ViconDataStreamSDK;
 using namespace CPP;
@@ -447,14 +474,57 @@ static PyMethodDef ModuleMethods[] = {
      
      {NULL, NULL, 0, NULL},
 };
+#if PY_MAJOR_VERSION >= 3
 
+static int pyvicon_traverse(PyObject *m, visitproc visit, void *arg) {
+    Py_VISIT(GETSTATE(m)->error);
+    return 0;
+}
+
+static int pyvicon_clear(PyObject *m) {
+    Py_CLEAR(GETSTATE(m)->error);
+    return 0;
+}
+
+
+static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "pyvicon",
+        NULL,
+        sizeof(struct module_state),
+        ModuleMethods,
+        NULL,
+        pyvicon_traverse,
+        pyvicon_clear,
+        NULL
+};
+#endif
+
+#if PY_MAJOR_VERSION >= 3
+#define INTERROR return NULL
+PyMODINIT_FUNC PyInit_pyvicon(void)
+{
+#else
+#define INTERROR return
 PyMODINIT_FUNC initpyvicon(void) {
+#endif
     //create the module
-    PyObject* m;
-    m = Py_InitModule("pyvicon", ModuleMethods);
+#if PY_MAJOR_VERSION >= 3
+    PyObject *m = PyModule_Create(&moduledef);
+#else
+    PyObject *m = Py_InitModule("pyvicon", ModuleMethods);
+#endif
     
     //create+add ViconError
-    ViconError = PyErr_NewException("pyvicon.error", NULL, NULL);
-    Py_INCREF(ViconError);
-    PyModule_AddObject(m, "error", ViconError);
+    struct module_state *st = GETSTATE(m);
+
+	st->error = PyErr_NewException("pyvicon.error", NULL, NULL);
+    if(st->error == NULL)
+	{
+		Py_INCREF(ViconError);
+		INTERROR;//PyModule_AddObject(m, "error", ViconError);
+	}
+#if PY_MAJOR_VERSION >= 3
+    return m;
+#endif
 }
