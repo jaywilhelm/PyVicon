@@ -8,7 +8,7 @@
 # Wraps the static functions made in the .cpp into a Python class object.
 # 
 
-import python_vicon.pyvicon
+import python_vicon.pyvicon as pyvicon
 
 class PyVicon:
     SM_ClientPull = 0
@@ -29,8 +29,9 @@ class PyVicon:
         # explicitly deleting probably does nothing
         # I don't know how to clean up a pyCapsule
         # assume it's automatic..?
-        del self._c
-    
+        #del self._c
+        return
+
     def connect(self, ip, port=801, defaults=True):
         stat = pyvicon.connect(self._c, "{}:{}".format(ip, port))
         if stat and defaults:
