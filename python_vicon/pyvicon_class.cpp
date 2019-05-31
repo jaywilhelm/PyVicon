@@ -12,7 +12,8 @@
 
 #include <Python.h>
 #include <string>
-#include "Client.h"
+//#include "Client.h"
+#include "DataStreamClient.h"
 
 #if PY_MAJOR_VERSION >= 3
 #define IS_PY3K
@@ -59,7 +60,7 @@ static PyObject* pyvicon_version(PyObject* self, PyObject* args) {
     
     //get, return
     Output_GetVersion out = client->GetVersion();
-    return Py_BuildValue("III", out.Major, out.Minor, out.Point);
+    return Py_BuildValue("iii", out.Major, out.Minor, out.Point);
 }
 
 // returns true if there is an exception to raise

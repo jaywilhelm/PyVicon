@@ -88,7 +88,7 @@ class PyVicon:
     def hasMarkerData(self):
         return pyvicon.hasMarkerData(self._c)
     def myversion(self):
-        return 1
+        return pyvicon.version(self._c)
 
 if __name__ == "__main__":
     client = PyVicon()

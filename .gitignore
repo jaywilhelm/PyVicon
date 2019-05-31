@@ -7,3 +7,11 @@
 /final_data/*.xml
 
 
+python_vicon/ViconDataStreamSDK_CPP.lib
+python_vicon/ViconDataStreamSDK_CPP.dll
+*.pdb
+python_vicon/boost_chrono-vc120-mt-1_60.dll
+python_vicon/boost_filesystem-vc120-mt-1_60.dll
+python_vicon/boost_python-vc120-mt-1_60.dll
+python_vicon/boost_system-vc120-mt-1_60.dll
+python_vicon/boost_thread-vc120-mt-1_60.dll
